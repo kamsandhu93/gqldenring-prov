@@ -2,9 +2,12 @@ package provider
 
 import (
 	"context"
+	"fmt"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	graphql "github.com/hasura/go-graphql-client"
+	"net/http"
 	"os"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
@@ -75,9 +78,23 @@ func (p *GqldenringProvider) Configure(ctx context.Context, req provider.Configu
 		)
 	}
 
+	statusEndpoint := strings.TrimSuffix(endpoint, "graphql") + "status"
+	sresp, err := http.Get(statusEndpoint)
+	if err != nil {
+		resp.Diagnostics.AddError("Cant connect to Gqldenring endpoint",
+			fmt.Sprintf("Failed to make a simple http request to %s, error %v", statusEndpoint, err))
+		return
+	}
+
+	if sresp.StatusCode != 200 {
+		resp.Diagnostics.AddError("Error response from Gqldenring endpoint",
+			fmt.Sprintf("Invalid response from %s, response status %s", statusEndpoint, sresp.Status))
+	}
+
 	if resp.Diagnostics.HasError() {
 		return
 	}
+
 	// Init GQL client
 	client := graphql.NewClient(endpoint, nil)
 
