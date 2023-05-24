@@ -1,5 +1,15 @@
 default: testacc
 
+# Install binary at ~/go/bin
+install:
+	go build -o ~/go/bin/terraform-provider-gqldenring-tfprov
+
+init-%:
+	cd examples/$* && terraform init
+
+plan-%:
+	cd examples/$* && terraform plan
+
 # Run acceptance tests
 .PHONY: testacc
 testacc:
