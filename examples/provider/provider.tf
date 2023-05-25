@@ -7,6 +7,6 @@ terraform {
 }
 
 provider "gqldenring" {
-  endpoint = "http://localhost:8080/graphql"
+  endpoint = "http://localhost:8080/query"
 
 }

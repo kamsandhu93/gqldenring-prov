@@ -7,7 +7,11 @@ terraform {
 }
 
 provider "gqldenring" {
-  endpoint = "http://localhost:8080/graphql"
+  endpoint = "http://localhost:8080/query"
 }
 
 data "gqldenring_weapons" "weapons" {}
+
+output "weapons" {
+  value = data.gqldenring_weapons.weapons
+}
