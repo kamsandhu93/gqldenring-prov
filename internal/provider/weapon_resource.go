@@ -6,6 +6,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/boolplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hasura/go-graphql-client"
@@ -53,12 +56,18 @@ func (r *WeaponResource) Schema(ctx context.Context, req resource.SchemaRequest,
 				Optional:            false,
 				Required:            false,
 				Computed:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
+				},
 			},
 			"custom": schema.BoolAttribute{
 				MarkdownDescription: "Example configurable attribute with default value",
 				Optional:            false,
 				Required:            false,
 				Computed:            true,
+				PlanModifiers: []planmodifier.Bool{
+					boolplanmodifier.UseStateForUnknown(),
+				},
 			},
 		},
 	}
@@ -185,11 +194,11 @@ func (r *WeaponResource) Update(ctx context.Context, req resource.UpdateRequest,
 	}
 
 	var mut struct {
-		CreateWeapon struct {
+		UpdateWeapon struct {
 			Name   string
 			Id     string
 			Custom bool
-		} `graphql:"createWeapon(id: $id, input: $input)"`
+		} `graphql:"updateWeapon(id: $id, input: $input)"`
 	}
 
 	vars := map[string]interface{}{
