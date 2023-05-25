@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/hashicorp/terraform-plugin-framework/path"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	graphql "github.com/hasura/go-graphql-client"
 	"net/http"
 	"os"
@@ -50,7 +51,7 @@ func (p *GqldenringProvider) Schema(ctx context.Context, req provider.SchemaRequ
 
 func (p *GqldenringProvider) Configure(ctx context.Context, req provider.ConfigureRequest, resp *provider.ConfigureResponse) {
 	var data GqldenringProviderModel
-
+	tflog.Info(ctx, "Configuring gqldenring client")
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
 
 	if data.Endpoint.IsUnknown() {
@@ -78,7 +79,9 @@ func (p *GqldenringProvider) Configure(ctx context.Context, req provider.Configu
 		)
 	}
 
-	statusEndpoint := strings.TrimSuffix(endpoint, "graphql") + "status"
+	statusEndpoint := strings.TrimSuffix(endpoint, "query") + "health"
+	tflog.Info(ctx, fmt.Sprintf("Checking gqldenring status endpoint %s", statusEndpoint))
+
 	sresp, err := http.Get(statusEndpoint)
 	if err != nil {
 		resp.Diagnostics.AddError("Cant connect to Gqldenring endpoint",
@@ -94,12 +97,16 @@ func (p *GqldenringProvider) Configure(ctx context.Context, req provider.Configu
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	ctx = tflog.SetField(ctx, "endpoint", endpoint)
 
+	tflog.Debug(ctx, "Creating gqldenring client")
 	// Init GQL client
 	client := graphql.NewClient(endpoint, nil)
 
 	resp.DataSourceData = client
 	resp.ResourceData = client
+
+	tflog.Info(ctx, "Configured gqldenring client", map[string]any{"success": true})
 }
 
 func (p *GqldenringProvider) Resources(ctx context.Context) []func() resource.Resource {
