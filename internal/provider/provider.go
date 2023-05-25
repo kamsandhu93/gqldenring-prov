@@ -111,7 +111,7 @@ func (p *GqldenringProvider) Configure(ctx context.Context, req provider.Configu
 
 func (p *GqldenringProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
-		NewExampleResource,
+		NewWeaponResource,
 	}
 }
 

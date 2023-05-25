@@ -10,6 +10,9 @@ init-%:
 plan-%:
 	cd examples/$* && terraform plan
 
+apply-%:
+	cd examples/$* && terraform apply
+
 # Run acceptance tests
 .PHONY: testacc
 testacc:
