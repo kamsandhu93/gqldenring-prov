@@ -231,13 +231,24 @@ func (r *WeaponResource) Delete(ctx context.Context, req resource.DeleteRequest,
 		return
 	}
 
-	// If applicable, this is a great opportunity to initialize any necessary
-	// provider client data and make a call using it.
-	// httpResp, err := r.client.Do(httpReq)
-	// if err != nil {
-	//     resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete example, got error: %s", err))
-	//     return
-	// }
+	var mut struct {
+		DeleteWeapon struct {
+			Id string
+		} `graphql:"deleteWeapon(id: $id)"`
+	}
+
+	vars := map[string]interface{}{
+		"id": graphql.ID(data.Id.ValueString()),
+	}
+
+	err := r.client.Mutate(context.Background(), &mut, vars)
+	if err != nil {
+		resp.Diagnostics.AddError(
+			"Unable to send delete weapon gql mut",
+			err.Error(),
+		)
+		return
+	}
 }
 
 func (r *WeaponResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {

@@ -10,10 +10,10 @@ provider "gqldenring" {
   endpoint = "http://localhost:8080/query"
 }
 
-resource "gqldenring_weapon" "example" {
-  name = "tf-wep-up"
-}
-
-output "weapon" {
-  value = gqldenring_weapon.example
-}
+#resource "gqldenring_weapon" "example" {
+#  name = "tf-wep-up"
+#}
+#
+#output "weapon" {
+#  value = gqldenring_weapon.example
+#}
