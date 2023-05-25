@@ -42,29 +42,29 @@ func (r *WeaponResource) Metadata(ctx context.Context, req resource.MetadataRequ
 func (r *WeaponResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: "Weapon resource",
+		Description: "Manage a weapon.",
 
 		Attributes: map[string]schema.Attribute{
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Name of weapon",
-				Optional:            false,
-				Required:            true,
-				Computed:            false,
+				Description: "The name of a weapon",
+				Optional:    false,
+				Required:    true,
+				Computed:    false,
 			},
 			"id": schema.StringAttribute{
-				MarkdownDescription: "Example configurable attribute with default value",
-				Optional:            false,
-				Required:            false,
-				Computed:            true,
+				Description: "The ID of a weapon.",
+				Optional:    false,
+				Required:    false,
+				Computed:    true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"custom": schema.BoolAttribute{
-				MarkdownDescription: "Example configurable attribute with default value",
-				Optional:            false,
-				Required:            false,
-				Computed:            true,
+				Description: "Whether the weapon is custom.",
+				Optional:    false,
+				Required:    false,
+				Computed:    true,
 				PlanModifiers: []planmodifier.Bool{
 					boolplanmodifier.UseStateForUnknown(),
 				},

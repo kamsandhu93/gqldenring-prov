@@ -4,6 +4,15 @@ default: testacc
 install:
 	go build -o ~/go/bin/terraform-provider-gqldenring
 
+gen: # broken bc m1
+	go generate ./...
+
+gen-doc:
+	terraform fmt -recursive ./examples/
+	PWD=$(pwd) docker run -v ${PWD}:/code -w /code golang:1.20.4-bullseye \
+		go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs@v0.14.1 \
+		generate --tf-version v1.4.0 --provider-name gqldenring --rendered-provider-name GQLdenring
+
 init-%:
 	cd examples/$* && terraform init
 

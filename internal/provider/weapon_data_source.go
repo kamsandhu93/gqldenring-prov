@@ -39,7 +39,7 @@ func (d *WeaponsDataSource) Metadata(ctx context.Context, req datasource.Metadat
 func (d *WeaponsDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: "Weapon data source",
+		Description: "Fetches a list of Weapons",
 		// Schema defines the schema for the data source.
 
 		Attributes: map[string]schema.Attribute{
@@ -48,10 +48,12 @@ func (d *WeaponsDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							Computed: true,
+							Computed:    true,
+							Description: "The ID of a weapon.",
 						},
 						"name": schema.StringAttribute{
-							Computed: true,
+							Computed:    true,
+							Description: "The name of a weapon.",
 						},
 					},
 				},

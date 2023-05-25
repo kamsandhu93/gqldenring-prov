@@ -40,9 +40,10 @@ func (p *GqldenringProvider) Metadata(ctx context.Context, req provider.Metadata
 
 func (p *GqldenringProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
 	resp.Schema = schema.Schema{
+		Description: "Interact with Gqldenring",
 		Attributes: map[string]schema.Attribute{
 			"endpoint": schema.StringAttribute{
-				MarkdownDescription: "Gqldenring GQL endpoint",
+				MarkdownDescription: "Gqldenring GQL Endpoint e.g. https://example.com/query, may also be set with the GQLDENRING_ENDPOINT envar.",
 				Optional:            true,
 			},
 		},
