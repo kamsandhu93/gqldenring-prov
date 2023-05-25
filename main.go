@@ -36,7 +36,7 @@ func main() {
 
 	opts := providerserver.ServeOpts{
 		// TODO: Update this string with the published name of your provider.
-		Address: "github.com/kamsandhu93/gqldenring-tfprov",
+		Address: "github.com/kamsandhu93/gqldenring",
 		Debug:   debug,
 	}
 

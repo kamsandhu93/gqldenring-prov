@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     gqldenring = {
-      source = "github.com/kamsandhu93/gqldenring-tfprov"
+      source = "github.com/kamsandhu93/gqldenring"
     }
   }
 }

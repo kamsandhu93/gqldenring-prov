@@ -24,6 +24,7 @@ type WeaponsDataSource struct {
 // WeaponsDataSourceModel describes the data source data model.
 type WeaponsDataSourceModel struct {
 	Weapons []WeaponModel `tfsdk:"weapons"`
+	Id      types.String  `tfsdk:"id"`
 }
 
 type WeaponModel struct {
@@ -55,7 +56,9 @@ func (d *WeaponsDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 					},
 				},
 			},
-		},
+			"id": schema.StringAttribute{
+				Computed: true,
+			}},
 	}
 }
 
@@ -96,7 +99,10 @@ func (d *WeaponsDataSource) Read(ctx context.Context, req datasource.ReadRequest
 		}
 
 		state.Weapons = append(state.Weapons, _weapon)
+
 	}
+
+	state.Id = types.StringValue("placeholder")
 
 	// Set state
 	diags := resp.State.Set(ctx, &state)

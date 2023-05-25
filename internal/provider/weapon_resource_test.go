@@ -2,9 +2,8 @@ package provider
 
 import (
 	"fmt"
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"testing"
 )
 
 func TestAccExampleResource(t *testing.T) {
@@ -14,29 +13,23 @@ func TestAccExampleResource(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read testing
 			{
-				Config: testAccExampleResourceConfig("one"),
+				Config: providerConfig + testAccWeaponResourceConfig("one"),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("scaffolding_example.test", "configurable_attribute", "one"),
-					resource.TestCheckResourceAttr("scaffolding_example.test", "defaulted", "example value when not configured"),
-					resource.TestCheckResourceAttr("scaffolding_example.test", "id", "example-id"),
+					resource.TestCheckResourceAttr("gqldenring_weapon.test", "name", "one"),
+					resource.TestCheckResourceAttr("gqldenring_weapon.test", "custom", "true"),
 				),
 			},
 			// ImportState testing
 			{
-				ResourceName:      "scaffolding_example.test",
+				ResourceName:      "gqldenring_weapon.test",
 				ImportState:       true,
 				ImportStateVerify: true,
-				// This is not normally necessary, but is here because this
-				// example code does not have an actual upstream service.
-				// Once the Read method is able to refresh information from
-				// the upstream service, this can be removed.
-				ImportStateVerifyIgnore: []string{"configurable_attribute", "defaulted"},
 			},
 			// Update and Read testing
 			{
-				Config: testAccWeaponResourceConfig("two"),
+				Config: providerConfig + testAccWeaponResourceConfig("two"),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("gqldenring_weapon.test", "configurable_attribute", "two"),
+					resource.TestCheckResourceAttr("gqldenring_weapon.test", "name", "two"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -44,10 +37,10 @@ func TestAccExampleResource(t *testing.T) {
 	})
 }
 
-func testAccWeaponResourceConfig(configurableAttribute string) string {
+func testAccWeaponResourceConfig(name string) string {
 	return fmt.Sprintf(`
-resource "gldenring_weapon" "test" {
-  configurable_attribute = %[1]q
+resource "gqldenring_weapon" "test" {
+ name = %[1]q
 }
-`, configurableAttribute)
+`, name)
 }

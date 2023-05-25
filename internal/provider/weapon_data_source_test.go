@@ -13,9 +13,9 @@ func TestAccWeaponsDataSource(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Read testing
 			{
-				Config: testAccWeaponsDataSourceConfig,
+				Config: providerConfig + testAccWeaponsDataSourceConfig,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("data.gqldenring_weapons.test", "id", "example-id"),
+					resource.TestCheckResourceAttr("data.gqldenring_weapons.test", "id", "placeholder"),
 				),
 			},
 		},

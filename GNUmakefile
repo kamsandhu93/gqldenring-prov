@@ -2,7 +2,7 @@ default: testacc
 
 # Install binary at ~/go/bin
 install:
-	go build -o ~/go/bin/terraform-provider-gqldenring-tfprov
+	go build -o ~/go/bin/terraform-provider-gqldenring
 
 init-%:
 	cd examples/$* && terraform init
@@ -15,5 +15,5 @@ apply-%:
 
 # Run acceptance tests
 .PHONY: testacc
-testacc:
-	TF_ACC=1 go test ./... -v $(TESTARGS) -timeout 120m
+testacc: install
+	TF_ACC_PROVIDER_NAMESPACE=github.com/kamsandhu93/ TF_CLI_CONFIG_FILE=~/.terraformrc TF_ACC=1 go test ./... -v $(TESTARGS) -timeout 120m
