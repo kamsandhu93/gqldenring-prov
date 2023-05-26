@@ -4,7 +4,7 @@ _This repository is built on the [Terraform Plugin Framework](https://github.com
 ## What is this?
 
 [GQLdenring](https://github.com/kamsandhu93/gqldenring) is a personal project I have developed for learning purposes. It 
-is a Go gqlgen Graphql service that serves data on the popular video game Eldenring. This project hosts a custom terraform provider
+is a Go gqlgen Graphql service that serves data on the popular video game Eldenring. This repo hosts a custom terraform provider
 that interacts with this service. 
 
 This is an educational repo, and is not intended for production use. 
