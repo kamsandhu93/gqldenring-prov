@@ -17,7 +17,7 @@ import (
 
 // Run the docs generation tool, check its repository for more information on how it works and how docs
 // can be customized.
-//go:generate go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs
+//go:generate go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs generate --tf-version v1.4.0 --provider-name gqldenring --rendered-provider-name GQLdenring
 
 var (
 	// these will be set by the goreleaser configuration
@@ -35,8 +35,7 @@ func main() {
 	flag.Parse()
 
 	opts := providerserver.ServeOpts{
-		// TODO: Update this string with the published name of your provider.
-		Address: "github.com/kamsandhu93/gqldenring",
+		Address: "registry.terraform.io/kamsandhu93/gqldenring",
 		Debug:   debug,
 	}
 

@@ -46,13 +46,13 @@ func (r *WeaponResource) Schema(ctx context.Context, req resource.SchemaRequest,
 
 		Attributes: map[string]schema.Attribute{
 			"name": schema.StringAttribute{
-				Description: "The name of a weapon",
+				Description: "The name of the weapon.",
 				Optional:    false,
 				Required:    true,
 				Computed:    false,
 			},
 			"id": schema.StringAttribute{
-				Description: "The ID of a weapon.",
+				Description: "The ID (uuid) of the weapon.",
 				Optional:    false,
 				Required:    false,
 				Computed:    true,
@@ -124,7 +124,7 @@ func (r *WeaponResource) Create(ctx context.Context, req resource.CreateRequest,
 	err := r.client.Mutate(context.Background(), &mut, vars)
 	if err != nil {
 		resp.Diagnostics.AddError(
-			"Unable to send gql query",
+			"Unable to send create weapon mutation to Gqldenring",
 			err.Error(),
 		)
 		return
@@ -166,7 +166,7 @@ func (r *WeaponResource) Read(ctx context.Context, req resource.ReadRequest, res
 	err := r.client.Query(context.Background(), &query, vars)
 	if err != nil {
 		resp.Diagnostics.AddError(
-			"Unable to send gql query",
+			"Unable to send WeaponById query to Gqldenring.",
 			err.Error(),
 		)
 		return
@@ -211,7 +211,7 @@ func (r *WeaponResource) Update(ctx context.Context, req resource.UpdateRequest,
 	err := r.client.Mutate(context.Background(), &mut, vars)
 	if err != nil {
 		resp.Diagnostics.AddError(
-			"Unable to send gql query",
+			"Unable to send UpdateWeapon mutation to Gqldenring.",
 			err.Error(),
 		)
 		return
@@ -244,7 +244,7 @@ func (r *WeaponResource) Delete(ctx context.Context, req resource.DeleteRequest,
 	err := r.client.Mutate(context.Background(), &mut, vars)
 	if err != nil {
 		resp.Diagnostics.AddError(
-			"Unable to send delete weapon gql mut",
+			"Unable to send DeleteWeapon mutation to Gqldenring.",
 			err.Error(),
 		)
 		return

@@ -1,28 +1,38 @@
-default: testacc
+TF_DIR ?= examples/resources/weapon
+
+default: install
 
 # Install binary at ~/go/bin
 install:
 	go build -o ~/go/bin/terraform-provider-gqldenring
 
-gen: # broken bc m1
+gen: # broken on arm mac
 	go generate ./...
 
-gen-doc:
+lint:
+	docker run -t --rm -v $(pwd):/app -w /app golangci/golangci-lint:latest golangci-lint run -v
+
+gen-doc: #workaround for arm mac
 	terraform fmt -recursive ./examples/
-	PWD=$(pwd) docker run -v ${PWD}:/code -w /code golang:1.20.4-bullseye \
+	PWD=$(pwd) docker run --rm -v ${PWD}:/code -w /code golang:1.20.4-bullseye \
 		go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs@v0.14.1 \
 		generate --tf-version v1.4.0 --provider-name gqldenring --rendered-provider-name GQLdenring
 
-init-%:
-	cd examples/$* && terraform init
+init:
+	terraform -chdir=${TF_DIR} init
 
-plan-%:
-	cd examples/$* && terraform plan
+plan:
+	terraform -chdir=${TF_DIR} plan
 
-apply-%:
-	cd examples/$* && terraform apply
+apply:
+	terraform -chdir=${TF_DIR} apply
+
+clean:
+	find . -name "*.tfstate" -type f -delete
 
 # Run acceptance tests
-.PHONY: testacc
 testacc: install
-	TF_ACC_PROVIDER_NAMESPACE=github.com/kamsandhu93/ TF_CLI_CONFIG_FILE=~/.terraformrc TF_ACC=1 go test ./... -v $(TESTARGS) -timeout 120m
+	TF_ACC=1 go test ./... -v $(TESTARGS) -timeout 120m
+
+
+.PHONY: testacc install gen gen-doc init plan apply clean

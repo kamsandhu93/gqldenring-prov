@@ -3,12 +3,12 @@
 page_title: "gqldenring_weapons Data Source - gqldenring"
 subcategory: ""
 description: |-
-  Fetches a list of Weapons
+  Fetches a list of Weapons.
 ---
 
 # gqldenring_weapons (Data Source)
 
-Fetches a list of Weapons
+Fetches a list of Weapons.
 
 
 
@@ -17,7 +17,7 @@ Fetches a list of Weapons
 
 ### Read-Only
 
-- `id` (String) The ID of this resource.
+- `id` (String) Used for unit testing this datasource.
 - `weapons` (Attributes List) (see [below for nested schema](#nestedatt--weapons))
 
 <a id="nestedatt--weapons"></a>
@@ -25,7 +25,7 @@ Fetches a list of Weapons
 
 Read-Only:
 
-- `id` (String) The ID of a weapon.
-- `name` (String) The name of a weapon.
+- `id` (String) The ID (uuid) of the weapon.
+- `name` (String) The name of the weapon.
 
 

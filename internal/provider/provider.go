@@ -3,18 +3,16 @@ package provider
 import (
 	"context"
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-framework/path"
-	"github.com/hashicorp/terraform-plugin-log/tflog"
-	graphql "github.com/hasura/go-graphql-client"
-	"net/http"
-	"os"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
+	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
+	graphql "github.com/hasura/go-graphql-client"
+	"net/http"
+	"os"
 )
 
 // Ensure GqldenringProvider satisfies various provider interfaces.
@@ -30,7 +28,8 @@ type GqldenringProvider struct {
 
 // GqldenringProviderModel describes the provider data model.
 type GqldenringProviderModel struct {
-	Endpoint types.String `tfsdk:"endpoint"`
+	Endpoint       types.String `tfsdk:"endpoint"`
+	StatusEndpoint types.String `tfsdk:"status_endpoint"`
 }
 
 func (p *GqldenringProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
@@ -43,8 +42,12 @@ func (p *GqldenringProvider) Schema(ctx context.Context, req provider.SchemaRequ
 		Description: "Interact with Gqldenring",
 		Attributes: map[string]schema.Attribute{
 			"endpoint": schema.StringAttribute{
-				MarkdownDescription: "Gqldenring GQL Endpoint e.g. https://example.com/query, may also be set with the GQLDENRING_ENDPOINT envar.",
-				Optional:            true,
+				Description: "Gqldenring GQL Endpoint e.g. https://example.com/query, may also be set with the GQLDENRING_ENDPOINT envar.",
+				Optional:    true,
+			},
+			"status_endpoint": schema.StringAttribute{
+				Description: "Gqldenring status Endpoint e.g. https://example.com/health, may also be set with the GQLDENRING_STATUS_ENDPOINT envar.",
+				Optional:    true,
 			},
 		},
 	}
@@ -80,19 +83,26 @@ func (p *GqldenringProvider) Configure(ctx context.Context, req provider.Configu
 		)
 	}
 
-	statusEndpoint := strings.TrimSuffix(endpoint, "query") + "health"
-	tflog.Info(ctx, fmt.Sprintf("Checking gqldenring status endpoint %s", statusEndpoint))
-
-	sresp, err := http.Get(statusEndpoint)
-	if err != nil {
-		resp.Diagnostics.AddError("Cant connect to Gqldenring endpoint",
-			fmt.Sprintf("Failed to make a simple http request to %s, error %v", statusEndpoint, err))
-		return
+	// Check health of server if status endpoint provided
+	statusEndpoint := os.Getenv("GQLDENRING_STATUS_ENDPOINT")
+	if !data.StatusEndpoint.IsNull() {
+		statusEndpoint = data.StatusEndpoint.ValueString()
 	}
 
-	if sresp.StatusCode != 200 {
-		resp.Diagnostics.AddError("Error response from Gqldenring endpoint",
-			fmt.Sprintf("Invalid response from %s, response status %s", statusEndpoint, sresp.Status))
+	if statusEndpoint != "" {
+		tflog.Info(ctx, fmt.Sprintf("Checking gqldenring status endpoint %s", statusEndpoint))
+
+		sresp, err := http.Get(statusEndpoint)
+		if err != nil {
+			resp.Diagnostics.AddError("Cant connect to Gqldenring endpoint",
+				fmt.Sprintf("Failed to make a simple http request to %s, error %v", statusEndpoint, err))
+			return
+		}
+
+		if sresp.StatusCode != 200 {
+			resp.Diagnostics.AddError("Error response from Gqldenring endpoint",
+				fmt.Sprintf("Invalid response from %s, response status %s", statusEndpoint, sresp.Status))
+		}
 	}
 
 	if resp.Diagnostics.HasError() {

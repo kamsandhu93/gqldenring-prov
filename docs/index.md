@@ -16,14 +16,14 @@ Interact with Gqldenring
 terraform {
   required_providers {
     gqldenring = {
-      source = "github.com/kamsandhu93/gqldenring"
+      source = "kamsandhu93/gqldenring"
     }
   }
 }
 
 provider "gqldenring" {
-  endpoint = "http://localhost:8080/query"
-
+  endpoint        = "http://localhost:8080/query"
+  status_endpoint = "http://localhost:8080/health"
 }
 ```
 
@@ -33,3 +33,4 @@ provider "gqldenring" {
 ### Optional
 
 - `endpoint` (String) Gqldenring GQL Endpoint e.g. https://example.com/query, may also be set with the GQLDENRING_ENDPOINT envar.
+- `status_endpoint` (String) Gqldenring status Endpoint e.g. https://example.com/health, may also be set with the GQLDENRING_STATUS_ENDPOINT envar.

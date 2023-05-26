@@ -17,11 +17,11 @@ Manage a weapon.
 
 ### Required
 
-- `name` (String) The name of a weapon
+- `name` (String) The name of the weapon.
 
 ### Read-Only
 
 - `custom` (Boolean) Whether the weapon is custom.
-- `id` (String) The ID of a weapon.
+- `id` (String) The ID (uuid) of the weapon.
 
 

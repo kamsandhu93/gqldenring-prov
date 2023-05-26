@@ -39,9 +39,8 @@ func (d *WeaponsDataSource) Metadata(ctx context.Context, req datasource.Metadat
 func (d *WeaponsDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		Description: "Fetches a list of Weapons",
+		Description: "Fetches a list of Weapons.",
 		// Schema defines the schema for the data source.
-
 		Attributes: map[string]schema.Attribute{
 			"weapons": schema.ListNestedAttribute{
 				Computed: true,
@@ -49,17 +48,18 @@ func (d *WeaponsDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
 							Computed:    true,
-							Description: "The ID of a weapon.",
+							Description: "The ID (uuid) of the weapon.",
 						},
 						"name": schema.StringAttribute{
 							Computed:    true,
-							Description: "The name of a weapon.",
+							Description: "The name of the weapon.",
 						},
 					},
 				},
 			},
 			"id": schema.StringAttribute{
-				Computed: true,
+				Computed:    true,
+				Description: "Used for unit testing this datasource.",
 			}},
 	}
 }
@@ -87,7 +87,7 @@ func (d *WeaponsDataSource) Read(ctx context.Context, req datasource.ReadRequest
 	err := d.client.Query(context.Background(), &query, nil)
 	if err != nil {
 		resp.Diagnostics.AddError(
-			"Unable to send gql query",
+			"Unable to query Gqldenring for weapons",
 			err.Error(),
 		)
 		return
