@@ -10,7 +10,7 @@ gen: # broken on arm mac
 	go generate ./...
 
 lint:
-	docker run -t --rm -v $(pwd):/app -w /app golangci/golangci-lint:latest golangci-lint run -v
+	PWD=$(pwd) docker run -t --rm -v ${PWD}:/app -w /app golangci/golangci-lint:latest-alpine golangci-lint run -v
 
 gen-doc: #workaround for arm mac
 	terraform fmt -recursive ./examples/
