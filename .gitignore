@@ -33,3 +33,7 @@ website/vendor
 
 # Keep windows files with windows line endings
 *.winfile eol=crlf
+
+# All files in GQLdenring dir except README
+gqldenring/*
+!gqldenring/README.md
