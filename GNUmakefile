@@ -30,9 +30,12 @@ apply:
 clean:
 	find . -name "*.tfstate" -type f -delete
 
+dl-gqldenring:
+	./scripts/dl_gqldenring.sh
+
 # Run acceptance tests
 testacc: install
-	TF_ACC=1 go test ./... -v $(TESTARGS) -timeout 120m
+	./scripts/run_tests.sh
 
 
 .PHONY: testacc install gen gen-doc init plan apply clean
